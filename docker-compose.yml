@@ -1,0 +1,29 @@
+version: "3"
+services:
+    postgres:
+        image: postgres:9.6
+        ports:
+            - 5432:5432
+        volumes:
+            - "pgdata:/var/lib/postgresql/data"
+        environment:
+            - POSTGRES_USER=fake_user
+            - POSTGRES_PASSWORD=fake_password
+            - POSTGRES_DB=events
+    dev:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - POSTGRES_USER=fake_user
+            - POSTGRES_PASSWORD=fake_password
+            - POSTGRES_DB=events
+        volumes:
+            - ./models:/home/werkspot/models
+            - ./scripts:/home/werkspot/scripts
+            - ./event_log.csv:/home/werkspot/event_log.csv
+            - ./dbt_project.yml:/home/werkspot/dbt_project.yml
+            - ./profiles.yml:/home/werkspot/profiles.yml
+            - ./bin/provision.sh:/home/werkspot/bin/provision.sh
+volumes:
+    pgdata:
