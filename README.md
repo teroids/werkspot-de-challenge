@@ -11,7 +11,7 @@ This projects uses docker-compose to run two Docker images:
 
 # Steps to run it
 
-1. Clone the repository.
+1. Clone/Fork/Download the repository.
 2. Make sure you have `Docker` and `docker-compose`.
 3. Execute the PostgreSQL container:
 ```bash
