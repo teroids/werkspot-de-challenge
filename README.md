@@ -28,7 +28,7 @@ The `bin/provision.sh` script follow this steps:
 
 1. Pre-process the CSV file, replacing `;` with `,` and sending the output to the `data` folder.
 2. The data is inserted into the `raw` schema in the table `events_logs`, using the command `dbt seed`.
-3. Two tables are generated:
+3. Two tables are generated, using the command `dbt run`:
 - `public.events`: This solves the first question.
 - `public.availability_snapshot`: This solves the second question.
 
@@ -43,3 +43,8 @@ user: fake_user
 password: fake_password
 db: events
 ```
+
+# Where does the code live?
+
+- [Python script](scripts/pre_processing.py)
+- [SQL queries](models/events)
