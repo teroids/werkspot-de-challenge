@@ -24,6 +24,6 @@ services:
             - ./event_log.csv:/home/werkspot/event_log.csv
             - ./dbt_project.yml:/home/werkspot/dbt_project.yml
             - ./profiles.yml:/home/werkspot/profiles.yml
-
+            - ./bin/provision.sh:/home/werkspot/bin/provision.sh
 volumes:
     pgdata:
