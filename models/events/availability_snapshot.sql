@@ -1,12 +1,12 @@
 WITH calendar AS (
-	SELECT
-		t.day::date AS date
-	FROM
-		generate_series(
-			(SELECT min(created_at) FROM {{ source('raw','event_log') }} ),
-			timestamp '2020-03-11', -- Adding an extra day
-			interval '1 day'
-		) AS t(day)
+SELECT
+    t.day::date AS date
+FROM
+	generate_series(
+		(SELECT min(created_at) FROM {{ source('raw','event_log') }} ),
+		timestamp '2020-03-11', -- Adding an extra day
+		interval '1 day'
+	) AS t(day)
 ),
 intermediate_model AS (
 SELECT
@@ -32,6 +32,3 @@ ORDER BY
     date
 )
 SELECT * FROM final_model
-
-
-
