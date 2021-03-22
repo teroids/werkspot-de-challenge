@@ -44,7 +44,17 @@ password: fake_password
 db: events
 ```
 
-# Validating 2th question
+# Validating results
+
+## First question
+
+In the first question:
+- The data was loaded into a denormalized table with no relations since this tables have better performance than a star-schema.
+- The meta-data column was exploded into multiple columns for simplicity.
+
+ ![First question](imgs/first_question_results.png)
+
+## Second question
 
 In the document there is an example of the second question, to validate my code I inserted the same data in another table and executed my SQLs, here are the results:
 
