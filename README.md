@@ -44,6 +44,54 @@ password: fake_password
 db: events
 ```
 
+# Validating 2th question
+
+In the document there is an example of the second question, to validate my code I inserted the same data in another table and executed my SQLs, here are the results:
+
+Test table:
+
+![Test table](imgs/test_table.png)
+
+Test Query:
+
+```sql
+WITH calendar AS (                                                                                                                                      
+SELECT                                                                                                                                                  
+    t.day::date AS calendar_day                                                                                                                                 
+FROM                                                                                                                                                    
+	generate_series(                                                                                                                                    
+		(SELECT min(created_at) FROM public.events_test),                                                                                               
+		timestamp '2020-03-11', -- Adding an extra day                                                                                                  
+		interval '1 day'                                                                                                                                
+	) AS t(day)                                                                                                                                         
+),                                                                                                                                                      
+intermediate_model AS (                                                                                                                                 
+select                                                                                                                                                  
+	professional_id,                                                                                                                                    
+	CASE WHEN event_type IN ('proposed', 'became_able_to_propose') THEN 1 ELSE 0 END AS is_working,                                                     
+	created_at,                                                                                                                                         
+	LEAD(created_at,1,timestamp '2020-03-10') OVER (PARTITION BY professional_id ORDER BY created_at) AS next_at                                        
+FROM                                                                                                                                                    
+	public.events_test
+),                                                                                                                                                      
+final_model AS (                                                                                                                                        
+SELECT                                                                                                                                                  
+    *,
+    row_number() over (partition by professional_id, calendar_day order by created_at desc) as rn
+FROM                                                                                                                                                    
+    calendar                                                                                                                               
+JOIN                                                                                                                                               
+    intermediate_model
+ON                                                                                                                                                      
+    calendar_day>=created_at and calendar_day<=next_at
+)                                                                                                                                                       
+SELECT calendar_day, sum(coalesce(is_working,0)) FROM final_model where rn=1 group by 1 order by 1
+```
+
+Results:
+
+![Test table](imgs/test_results.png)
+
 # Where does the code live?
 
 - [Python script](scripts/pre_processing.py)
